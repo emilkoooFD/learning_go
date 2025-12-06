@@ -1,3 +1,3 @@
-module pract-2
+module app-2
 
 go 1.25.4

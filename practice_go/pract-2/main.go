@@ -1,12 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 // Калькулятор конвертации температуры
 func main() {
 	for {
 		// Вывод переменных полученных с функции getData()
-		fromScale, toScale, temperature := getData()
+		fromScale, toScale, temperature, err := getData()
+		if err != nil {
+			fmt.Println("Не правильно введены данные")
+			continue
+		}
 		// Присваиваю результат выполнения функции в переменную
 		result := converterTemperature(fromScale, toScale, temperature)
 		// Вывод в консоль полученных результатов
@@ -19,7 +26,7 @@ func main() {
 }
 
 // Получение и возврат данных с консоли
-func getData() (string, string, float64) {
+func getData() (string, string, float64, error) {
 	var fromScale string
 	var toScale string
 	var temperature float64
@@ -29,7 +36,11 @@ func getData() (string, string, float64) {
 	fmt.Scan(&temperature)
 	fmt.Println("В какую шкалу конвертировать?(c/f/k): ")
 	fmt.Scan(&toScale)
-	return fromScale, toScale, temperature
+	if (fromScale != "c" && fromScale != "f" && fromScale != "k") ||
+		(toScale != "c" && toScale != "f" && toScale != "k") || temperature <= 0 {
+		return "", "", 0, errors.New("no_params_error")
+	}
+	return fromScale, toScale, temperature, nil
 }
 
 // Проверка конвертации
